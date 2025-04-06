@@ -1,0 +1,49 @@
+Contents of file1.xlsx:
+----------------------------------------
+Sheet: Sheet1
+  Cell A1 => value: 10, formula: 
+  Cell A2 => value: 20, formula: 
+  Cell A3 => value: None, formula: =SUM(A1, A2)
+  Cell B1 => value: Hello, formula: 
+  Cell B2 => value: None, formula: =CONCAT(B1, " World")
+  Cell B3 => value: None, formula: 
+
+Sheet: Sheet2
+  Cell A1 => value: None, formula: 
+  Cell A10 => value: None, formula: 
+  Cell A11 => value: None, formula: 
+  Cell A2 => value: None, formula: 
+  Cell A3 => value: None, formula: 
+  Cell A4 => value: None, formula: 
+  Cell A5 => value: None, formula: 
+  Cell A6 => value: None, formula: 
+  Cell A7 => value: None, formula: 
+  Cell A8 => value: None, formula: 
+  Cell A9 => value: None, formula: 
+  Cell B1 => value: None, formula: 
+  Cell B10 => value: None, formula: 
+  Cell B11 => value: None, formula: 
+  Cell B2 => value: None, formula: 
+  Cell B3 => value: None, formula: 
+  Cell B4 => value: None, formula: 
+  Cell B5 => value: None, formula: 
+  Cell B6 => value: None, formula: 
+  Cell B7 => value: None, formula: 
+  Cell B8 => value: None, formula: 
+  Cell B9 => value: None, formula: 
+  Cell C1 => value: None, formula: 
+  Cell C10 => value: 99, formula: 
+  Cell C11 => value: None, formula: =C10 * 2
+  Cell C2 => value: None, formula: 
+  Cell C3 => value: None, formula: 
+  Cell C4 => value: None, formula: 
+  Cell C5 => value: None, formula: 
+  Cell C6 => value: None, formula: 
+  Cell C7 => value: None, formula: 
+  Cell C8 => value: None, formula: 
+  Cell C9 => value: None, formula: 
+
+Sheet: SheetX_OnlyInFile1
+  Cell A1 => value: 123, formula: 
+  Cell A2 => value: None, formula: =A1 * 2
+

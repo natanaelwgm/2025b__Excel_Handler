@@ -1,0 +1,19 @@
+Comparison summary between file1.xlsx and file2.xlsx
+============================================================
+
+Sheet differences:
+  Sheets only in file1.xlsx: SheetX_OnlyInFile1
+  Sheets only in file2.xlsx: UniqueSheetInFile2
+
+Cell-level differences in common sheets:
+  Differences in sheet 'Sheet2':
+    Cell C11:
+      formula differs: '=C10 * 2' vs. '=C10 * 3'
+
+  Differences in sheet 'Sheet1':
+    Cell B2:
+      formula differs: '=CONCAT(B1, " World")' vs. '=CONCAT(B1, " Universe")'
+    Cell A2:
+      value differs: '20' vs. '21'
+
+End of comparison.
