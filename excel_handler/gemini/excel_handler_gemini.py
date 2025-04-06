@@ -339,7 +339,7 @@ def write_comparison_summary_to_txt(file1_path, file2_path, comparison_results, 
 
 # --- NEW: End-to-End Comparison Function ---
 
-def compare_excel_files_e2e(file1_path, file2_path, keep_files=False):
+def compare_excel_files_e2e(file1_path, file2_path, keep_files=True):
     """
     Performs the end-to-end comparison of two Excel files.
 
