@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=42"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "excel-handler"
+version = "0.1.0"
+description = "A Python utility for working with Excel files (reading, comparing, generating demos)."
+readme = "README.md"
+requires-python = ">=3.6"
+license = { text = "MIT License" }
+authors = [
+    { name = "Excel Handler Team" }
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Topic :: Office/Business :: Financial :: Spreadsheet",
+]
+dependencies = [
+    "openpyxl>=3.0.0",
+    "pytz>=2021.1"
+]
+
+[project.urls]
+Homepage = "https://github.com/natanaelwgm/2025b__Excel_Handler"
+Repository = "https://github.com/natanaelwgm/2025b__Excel_Handler"
+
+# Tell setuptools to find packages in the 'excel_handler' directory
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["excel_handler*"] 
