@@ -24,6 +24,11 @@ def read_worksheet_data(ws_values, ws_formulas):
     if max_row is None or max_col is None or max_row == 0 or max_col == 0:
          return {}
 
+    total_cells = max_row * max_col
+    if total_cells > 1000:  # Only show detailed progress for large sheets
+        print(f"    Reading large sheet with {max_row} rows x {max_col} columns ({total_cells} cells)")
+        
+    cells_with_data = 0
     for row_idx in range(1, max_row + 1):
         for col_idx in range(1, max_col + 1):
             cell_coord = f"{get_column_letter(col_idx)}{row_idx}"
@@ -35,7 +40,9 @@ def read_worksheet_data(ws_values, ws_formulas):
             if evaluated_value is not None or (isinstance(formula_content, str) and formula_content.startswith('=')):
                  cell_info = get_cell_data(evaluated_value, formula_content)
                  sheet_data[cell_coord] = cell_info
+                 cells_with_data += 1
 
+    print(f"    Found {cells_with_data} cell(s) with data out of {total_cells} total cells")
     return sheet_data
 
 def read_excel_file_data(filepath):
@@ -75,11 +82,14 @@ def read_excel_file_data(filepath):
             print(f"  Warning: No sheets found in '{filepath}'.")
             return {}
 
-        for sheet_name in sheet_names:
+        total_sheets = len(sheet_names)
+        print(f"  Found {total_sheets} sheet(s) in '{filepath}'")
+        
+        for sheet_idx, sheet_name in enumerate(sheet_names, 1):
             if sheet_name in wb_values.sheetnames:
                 ws_values = wb_values[sheet_name]
                 ws_formulas = wb_formulas[sheet_name]
-                print(f"  Processing sheet: '{sheet_name}'...")
+                print(f"  Processing sheet {sheet_idx}/{total_sheets}: '{sheet_name}'...")
                 sheet_content = read_worksheet_data(ws_values, ws_formulas)
                 if sheet_content:
                      all_excel_data[sheet_name] = sheet_content
@@ -127,7 +137,12 @@ def compare_excel_data(data1, data2):
     if meta["sheets_only_in_file1"] or meta["sheets_only_in_file2"] or common_sheets:
          differences["_metadata"] = meta # Ensure metadata is always present if sheets exist
 
-    for sheet_name in sorted(common_sheets):
+    total_common_sheets = len(common_sheets)
+    if total_common_sheets > 0:
+        print(f"  Comparing {total_common_sheets} common sheet(s)")
+    
+    for sheet_idx, sheet_name in enumerate(sorted(common_sheets), 1):
+        print(f"  Comparing sheet {sheet_idx}/{total_common_sheets}: '{sheet_name}'")
         sheet_diff = {}
         sheet_data1 = data1.get(sheet_name, {})
         sheet_data2 = data2.get(sheet_name, {})
@@ -304,7 +319,9 @@ def write_comparison_summary_to_txt(file1_path, file2_path, comparison_results, 
                  # but leave a fallback message just in case.
                  f.write("No differences found in cell values or formulas within common sheets.\n")
             else:
-                for sheet_name in diff_sheets:
+                print(f"  Writing differences for {len(diff_sheets)} sheet(s) with differences")
+                for sheet_idx, sheet_name in enumerate(diff_sheets, 1):
+                    print(f"  Writing differences for sheet {sheet_idx}/{len(diff_sheets)}: '{sheet_name}'")
                     sheet_diff_data = comparison_results[sheet_name]
                     # Check if sheet_diff_data is actually a dictionary (it should be)
                     if not isinstance(sheet_diff_data, dict):
@@ -314,6 +331,7 @@ def write_comparison_summary_to_txt(file1_path, file2_path, comparison_results, 
                     f.write(f"\n--- Differences in Sheet: {sheet_name} ---\n")
                     # Sort differing cells based on row number, then column letter
                     sorted_cells = sorted(sheet_diff_data.keys(), key=lambda x: (int(''.join(filter(str.isdigit, x))), ''.join(filter(str.isalpha, x))))
+                    f.write(f"  Found {len(sorted_cells)} cell(s) with differences\n")
                     for cell_coord in sorted_cells:
                         diff_info = sheet_diff_data[cell_coord]
                         # Check if diff_info is the expected format
@@ -404,8 +422,10 @@ def compare_excel_files_e2e(file1_path, file2_path, keep_files=True):
         output_dir_name = "."
 
     # --- Read Data from Files ---
-    print(f"\n--- Reading Data ---")
+    print(f"\n--- Reading Data (Stage 1/4) ---")
+    print(f"  Reading file 1: {file1_path}")
     excel1_contents = read_excel_file_data(file1_path)
+    print(f"  Reading file 2: {file2_path}")
     excel2_contents = read_excel_file_data(file2_path)
 
     # Handle cases where reading failed critically
@@ -415,16 +435,16 @@ def compare_excel_files_e2e(file1_path, file2_path, keep_files=True):
         return None
 
     # --- Write Individual Content Dumps ---
-    print("\n--- Writing Content Dumps ---")
+    print("\n--- Writing Content Dumps (Stage 2/4) ---")
     write_excel_data_to_txt(file1_path, excel1_contents, file1_txt_dump_path)
     write_excel_data_to_txt(file2_path, excel2_contents, file2_txt_dump_path)
 
     # --- Compare the Data ---
-    print("\n--- Comparing Files ---")
+    print("\n--- Comparing Files (Stage 3/4) ---")
     comparison_results = compare_excel_data(excel1_contents, excel2_contents)
 
     # --- Write Comparison Summary Report ---
-    print("\n--- Writing Comparison Summary ---")
+    print("\n--- Writing Comparison Summary (Stage 4/4) ---")
     write_comparison_summary_to_txt(file1_path, file2_path, comparison_results, comparison_summary_txt_path)
 
     # --- Cleanup Generated Output Files (Conditional) ---
